@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>JS + CSS Clock</title>
-</head>
-<body>
-
-
+  <head>
+    <meta charset="UTF-8" />
+    <title>JS + CSS Clock</title>
+  </head>
+  <body>
     <div class="clock">
       <div class="clock-face">
         <div class="hand hour-hand"></div>
@@ -15,60 +13,103 @@
       </div>
     </div>
 
+    <style>
+      html {
+        background: #018ded url(http://unsplash.it/1500/1000?image=881&blur=50);
+        background-size: cover;
+        font-family: "helvetica neue";
+        text-align: center;
+        font-size: 10px;
+      }
 
-  <style>
-    html {
-      background: #018DED url(http://unsplash.it/1500/1000?image=881&blur=50);
-      background-size: cover;
-      font-family: 'helvetica neue';
-      text-align: center;
-      font-size: 10px;
-    }
+      body {
+        margin: 0;
+        font-size: 2rem;
+        display: flex;
+        flex: 1;
+        min-height: 100vh;
+        align-items: center;
+      }
 
-    body {
-      margin: 0;
-      font-size: 2rem;
-      display: flex;
-      flex: 1;
-      min-height: 100vh;
-      align-items: center;
-    }
+      .clock {
+        width: 30rem;
+        height: 30rem;
+        border: 20px solid white;
+        border-radius: 50%;
+        margin: 50px auto;
+        position: relative;
+        padding: 2rem;
+        box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1), inset 0 0 0 3px #efefef,
+          inset 0 0 10px black, 0 0 10px rgba(0, 0, 0, 0.2);
+      }
 
-    .clock {
-      width: 30rem;
-      height: 30rem;
-      border: 20px solid white;
-      border-radius: 50%;
-      margin: 50px auto;
-      position: relative;
-      padding: 2rem;
-      box-shadow:
-        0 0 0 4px rgba(0,0,0,0.1),
-        inset 0 0 0 3px #EFEFEF,
-        inset 0 0 10px black,
-        0 0 10px rgba(0,0,0,0.2);
-    }
+      .clock-face {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform: translateY(
+          -3px
+        ); /* account for the height of the clock hands */
+      }
 
-    .clock-face {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      transform: translateY(-3px); /* account for the height of the clock hands */
-    }
+      .hand {
+        width: 50%;
+        height: 6px;
+        background: black;
+        position: absolute;
+        top: 50%;
+      }
 
-    .hand {
-      width: 50%;
-      height: 6px;
-      background: black;
-      position: absolute;
-      top: 50%;
-    }
+      .hour-hand {
+        transform: rotateZ(90deg) rotateY(40deg);
+        transition: cubic-bezier(0, 1.56, 0.58, 1) 1s;
+        transform-origin: 100%;
+      }
 
-  </style>
+      .min-hand {
+        transform: rotateZ(90deg) rotateY(20deg);
+        transition: cubic-bezier(0, 1.56, 0.58, 1) 1s;
+        transform-origin: 100%;
+      }
 
-  <script>
+      .second-hand {
+        transform: rotateZ(90deg);
+        transition: cubic-bezier(0, 1.56, 0.58, 1) 1s;
+        transform-origin: 100%;
+      }
+    </style>
 
+    <script>
+      const secondHand = document.querySelector(".second-hand");
+        const minHand = document.querySelector(".min-hand");
+        const hourHand = document.querySelector(".hour-hand");
+        let secRound = 0;
+        let minRound = 0;
+        let hourRound = 0;
 
-  </script>
-</body>
+      function setHand() {
+        const now = new Date();
+        if(now.getSeconds() === 0) secRound++
+        if(now.getHours() === 0) hourRound++
+        if(now.getMinutes() === 0) minRound++
+
+        const secRot = 90 + (now.getSeconds() / 60) * 360 + (360 * secRound);
+        const hourRot = 90 + (now.getHours() / 12) * 360 + (360 * hourRound);
+        const minutesRot = 90 + (now.getMinutes() / 60) * 360 + (360 * minRound);
+        console.log(now.getSeconds(), secRot);
+        secondHand.style.transform = `rotateZ(${secRot}deg)`;
+        minHand.style.transform = `rotateZ(${minutesRot}deg)`;
+        hourHand.style.transform = `rotateZ(${hourRot}deg)`;
+
+      }
+
+      setHand();
+
+      window.addEventListener("DOMContentLoaded", function(e) {
+        setInterval(function() {
+          setHand();
+        }, 1000);
+      });
+    </script>
+  </body>
 </html>
